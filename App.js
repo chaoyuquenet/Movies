@@ -1,15 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import OfflineNotice from './components/OfflineNotice';
-import Search from './components/Search';
+import Navigation from './navigation/Navigation';
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <OfflineNotice />
-        <Search />
+        <Navigation />
       </View>
     );
   }
@@ -23,5 +21,3 @@ const styles = StyleSheet.create({
     // justifyContent: 'center'
   }
 });
-
-// <View style={styles.container}>

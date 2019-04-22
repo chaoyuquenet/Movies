@@ -4,10 +4,11 @@ import {
   View,
   TextInput,
   Button,
-  Text,
   FlatList,
   ActivityIndicator
 } from 'react-native';
+import { connect } from 'react-redux';
+
 import FilmItem from './FilmItem';
 import { getFilmsFromApiWithSearchedText } from '../api/TMDBApi';
 
@@ -56,6 +57,10 @@ class Search extends React.Component {
     );
   }
 
+  displayDetailForFilm = idFilm => {
+    this.props.navigation.navigate('FilmDetail', { idFilm: idFilm });
+  };
+
   displayLoading() {
     if (this.state.isLoading) {
       return (
@@ -65,9 +70,6 @@ class Search extends React.Component {
       );
     }
   }
-  displayDetailForFilm = idFilm => {
-    this.props.navigation.navigate('FilmDetail', { idFilm: idFilm });
-  };
 
   render() {
     return (
@@ -81,10 +83,18 @@ class Search extends React.Component {
         <Button title="Rechercher" onPress={() => this.searchFilms()} />
         <FlatList
           data={this.state.films}
+          extraData={this.props.favoritesFilm}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
             <FilmItem
               film={item}
+              isFilmFavorite={
+                this.props.favoritesFilm.findIndex(
+                  film => film.id === item.id
+                ) !== -1
+                  ? true
+                  : false
+              }
               displayDetailForFilm={this.displayDetailForFilm}
             />
           )}
@@ -125,4 +135,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Search;
+const mapStateToProps = state => {
+  return {
+    favoritesFilm: state.favoritesFilm
+  };
+};
+
+export default connect(mapStateToProps)(Search);

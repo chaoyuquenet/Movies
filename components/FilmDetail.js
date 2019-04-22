@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Image,
-  Button
+  TouchableOpacity
 } from 'react-native';
 import moment from 'moment';
 import numeral from 'numeral';
@@ -49,6 +49,19 @@ class FilmDetail extends React.Component {
     this.props.dispatch(action);
   }
 
+  displayFavoriteImage() {
+    let sourceImage = require('../images/ic_favorite_border.png');
+    if (
+      this.props.favoritesFilm.findIndex(
+        item => item.id === this.state.film.id
+      ) !== -1
+    ) {
+      // Film dans nos favoris
+      sourceImage = require('../images/ic_favorite.png');
+    }
+    return <Image style={styles.favorite_image} source={sourceImage} />;
+  }
+
   displayFilm() {
     const { film } = this.state;
     if (film != undefined) {
@@ -59,7 +72,12 @@ class FilmDetail extends React.Component {
             source={{ uri: getImageFromApi(film.backdrop_path) }}
           />
           <Text style={styles.title_text}>{film.title}</Text>
-          <Button title="Favoirs" onPress={() => this.favoritesFilm()} />
+          <TouchableOpacity
+            style={styles.favorite_container}
+            onPress={() => this.toggleFavorite()}
+          >
+            {this.displayFavoriteImage()}
+          </TouchableOpacity>
           <Text style={styles.description_text}>{film.overview}</Text>
           <Text style={styles.default_text}>
             Sorti le {moment(new Date(film.release_date)).format('DD/MM/YYYY')}
@@ -104,20 +122,6 @@ class FilmDetail extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    favoritesFilm: state.favoritesFilm
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    dispatch: action => {
-      dispatch(action);
-    }
-  };
-};
-
 const styles = StyleSheet.create({
   main_container: {
     flex: 1
@@ -160,10 +164,20 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     marginTop: 5
+  },
+  favorite_container: {
+    alignItems: 'center'
+  },
+  favorite_image: {
+    width: 40,
+    height: 40
   }
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FilmDetail);
+const mapStateToProps = state => {
+  return {
+    favoritesFilm: state.favoritesFilm
+  };
+};
+
+export default connect(mapStateToProps)(FilmDetail);

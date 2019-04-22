@@ -1,5 +1,3 @@
-// Components/FilmDetail.js
-
 import React from 'react';
 import {
   StyleSheet,
@@ -7,11 +5,14 @@ import {
   Text,
   ActivityIndicator,
   ScrollView,
-  Image
+  Image,
+  Button
 } from 'react-native';
-import { getFilmDetailFromApi, getImageFromApi } from '../api/TMDBApi';
 import moment from 'moment';
 import numeral from 'numeral';
+import { connect } from 'react-redux';
+
+import { getFilmDetailFromApi, getImageFromApi } from '../api/TMDBApi';
 
 class FilmDetail extends React.Component {
   constructor(props) {
@@ -43,6 +44,11 @@ class FilmDetail extends React.Component {
     }
   }
 
+  toggleFavorite() {
+    const action = { type: 'TOGGLE_FAVORITE', value: this.state.film };
+    this.props.dispatch(action);
+  }
+
   displayFilm() {
     const { film } = this.state;
     if (film != undefined) {
@@ -53,6 +59,7 @@ class FilmDetail extends React.Component {
             source={{ uri: getImageFromApi(film.backdrop_path) }}
           />
           <Text style={styles.title_text}>{film.title}</Text>
+          <Button title="Favoirs" onPress={() => this.favoritesFilm()} />
           <Text style={styles.description_text}>{film.overview}</Text>
           <Text style={styles.default_text}>
             Sorti le {moment(new Date(film.release_date)).format('DD/MM/YYYY')}
@@ -96,6 +103,20 @@ class FilmDetail extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    favoritesFilm: state.favoritesFilm
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch: action => {
+      dispatch(action);
+    }
+  };
+};
 
 const styles = StyleSheet.create({
   main_container: {
@@ -142,4 +163,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default FilmDetail;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FilmDetail);

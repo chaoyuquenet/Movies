@@ -1,5 +1,3 @@
-// Navigation/Navigation.js
-
 import React from 'react'; // N'oubliez pas l'import de React ici. On en a besoin pour rendre nos components React Native Image !
 import { StyleSheet, Image } from 'react-native';
 import {
@@ -7,6 +5,7 @@ import {
   createAppContainer,
   createBottomTabNavigator
 } from 'react-navigation';
+
 import Search from '../components/Search';
 import FilmDetail from '../components/FilmDetail';
 import Favorites from '../components/Favorites';
@@ -16,6 +15,18 @@ const SearchStackNavigator = createStackNavigator({
     screen: Search,
     navigationOptions: {
       title: 'Rechercher'
+    }
+  },
+  FilmDetail: {
+    screen: FilmDetail
+  }
+});
+
+const FavoritesStackNavigator = createStackNavigator({
+  Favorites: {
+    screen: Favorites,
+    navigationOptions: {
+      title: 'Favoris'
     }
   },
   FilmDetail: {
@@ -40,7 +51,7 @@ const MoviesTabNavigator = createBottomTabNavigator(
       }
     },
     Favorites: {
-      screen: Favorites,
+      screen: FavoritesStackNavigator,
       navigationOptions: {
         tabBarIcon: () => {
           return (

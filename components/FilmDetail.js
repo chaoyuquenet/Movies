@@ -6,13 +6,16 @@ import {
   ActivityIndicator,
   ScrollView,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Share,
+  Platform
 } from 'react-native';
 import moment from 'moment';
 import numeral from 'numeral';
 import { connect } from 'react-redux';
 
 import { getFilmDetailFromApi, getImageFromApi } from '../api/TMDBApi';
+import { underline } from 'ansi-colors';
 
 class FilmDetail extends React.Component {
   constructor(props) {
@@ -126,11 +129,34 @@ class FilmDetail extends React.Component {
     }
   }
 
+  shareFilm() {
+    const { film } = this.state;
+    Share.share({ title: film.title, message: film.overview });
+  }
+
+  displayFloatingActionButton() {
+    const { film } = this.state;
+    if (film !== undefined && Platform.OS === 'android') {
+      return (
+        <TouchableOpacity
+          style={styles.share_touchable_floatingactionbutton}
+          onPress={() => this.shareFilm()}
+        >
+          <Image
+            style={styles.share_image}
+            source={require('../images/ic_share.png')}
+          />
+        </TouchableOpacity>
+      );
+    }
+  }
+
   render() {
     return (
       <View style={styles.main_container}>
         {this.displayLoading()}
         {this.displayFilm()}
+        {this.displayFloatingActionButton()}
       </View>
     );
   }
@@ -185,6 +211,21 @@ const styles = StyleSheet.create({
   favorite_image: {
     width: 40,
     height: 40
+  },
+  share_touchable_floatingactionbutton: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    right: 30,
+    bottom: 10,
+    borderRadius: 30,
+    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  share_image: {
+    width: 20,
+    height: 20
   }
 });
 

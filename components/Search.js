@@ -4,7 +4,8 @@ import {
   TextInput,
   Button,
   ActivityIndicator,
-  SafeAreaView
+  SafeAreaView,
+  View
 } from 'react-native';
 
 import { getFilmsFromApiWithSearchedText } from '../api/TMDBApi';

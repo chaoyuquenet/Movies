@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   StyleSheet,
-  View,
   TextInput,
   Button,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView
 } from 'react-native';
 
 import { getFilmsFromApiWithSearchedText } from '../api/TMDBApi';
@@ -72,7 +72,7 @@ class Search extends React.Component {
 
   render() {
     return (
-      <View style={styles.main_container}>
+      <SafeAreaView style={styles.main_container}>
         <TextInput
           style={styles.textinput}
           placeholder="Titre du film"
@@ -89,7 +89,7 @@ class Search extends React.Component {
           favoriteList={false}
         />
         {this.displayLoading()}
-      </View>
+      </SafeAreaView>
     );
   }
 }
